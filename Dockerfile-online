@@ -1,0 +1,52 @@
+
+FROM elastic-stack:latest
+
+#ADD apache logs 
+RUN mkdir /home/ubuntu
+RUN wget -O /home/ubuntu/apache-daily-access.log https://logz.io/sample-data
+
+#6 CONFIGURE ELASTIC SEARCH
+RUN sed -i "s|#network.host: 192.168.0.1|network.host: 0.0.0.0 |g" /etc/elasticsearch/elasticsearch.yml
+RUN sed -i "s|#http.port: |http.port: |g" /etc/elasticsearch/elasticsearch.yml
+
+
+# CONFIGURE KIBANA
+RUN sed -i "s|#server.host: \"localhost\"|server.host: 0.0.0.0 |g" /etc/kibana/kibana.yml
+RUN sed -i "s|#server.port: |server.port: |g" /etc/kibana/kibana.yml
+RUN sed -i "s|#elasticsearch.url: |elasticsearch.url: |g" /etc/kibana/kibana.yml
+
+# CONFIGURE LOGSTASH
+RUN echo 'input { \n\
+     file { \n\
+        path => "/home/ubuntu/apache-daily-access.log" \n\
+		start_position => "beginning" \n\
+        sincedb_path => "/dev/null" \n\
+      } \n\
+   } \n\ 
+   filter { \n\
+     grok { \n\
+         match => { "message" => "%{COMBINEDAPACHELOG}" } \n\
+      } \n\
+      date { \n\
+         match => [ "timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]\n\
+      } \n\
+      geoip { \n\
+         source => "clientip"\n\
+      } \n\
+   } \n\ 
+   output { \n\
+     elasticsearch { \n\
+        hosts => ["localhost:9200"]\n\
+     } \n\
+   } \n\ 
+' > /etc/logstash/conf.d/apache-01.conf
+
+EXPOSE 9200
+EXPOSE 5601
+
+# RUN SCRIPTS
+COPY script.sh script.sh
+RUN chmod +x script.sh
+CMD ./script.sh
+
+MAINTAINER Name <sallah.kokaina@gmail.com> 
