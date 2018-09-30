@@ -1,5 +1,5 @@
 # elk-docker
-From Zero to an Ubuntu 18.01 based ELK Docker Image exposed on port 5601
+From Zero to an Ubuntu 18.04 based ELK Docker Image exposed on port 5601
 
 # BUILD AND RUN
 ```
