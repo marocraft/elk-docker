@@ -8,7 +8,7 @@ docker build -t elastic-stack-online -f Dockerfile-online .
 docker run -it -d --name elk -p 5601:5601 elastic-stack-online . 
 ```
 
-Further details may you need to get the ELK stack getting up and running from scratch.
+Further details may you need to get the ELK stack up and running from scratch.
 
 ## GOING FOR ELASTICSEARCH:
 
