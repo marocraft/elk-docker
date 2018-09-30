@@ -1,14 +1,14 @@
 # elk-docker
-From Zero to an ELK Docker Image exposed on port 5601
+From Zero to an Ubuntu 18.01 based ELK Docker Image exposed on port 5601
 
-# BUILDING A DOCKER IMAGE
+# BUILD AND RUN
 ```
 docker build -t elastic-stack .  
 docker build -t elastic-stack-online -f Dockerfile-online .  
 docker run -it -d --name elk -p 5601:5601 elastic-stack-online . 
 ```
 
-Further details mail you need to go from scratch.
+Further details may you need to get the ELK stack getting up and running from scratch.
 
 ## GOING FOR ELASTICSEARCH:
 
@@ -46,7 +46,7 @@ apt-get update
 apt-get install elasticsearch
 ```
 
-#6 - edit configuration file and set ip adress to 9200
+#6 - edit configuration file and set ip address and port
 ```
 sudo vim /etc/elasticsearch/elasticsearch.yml
 network.host: « localhost »
